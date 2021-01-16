@@ -9,18 +9,18 @@ public class StuckInARut {
         int num_failed = 0;
         for (int i = 0; i < files.size(); i += 2) {
             Input in = readInput(files.get(i));
-            String[] expected_ans = readOutput(in.n, files.get(i + 1));
-            String[] amounts = simulateAmounts(in.n, in.xs, in.ys, in.dirs);
+            int[] expected_ans = readOutput(in.n, files.get(i + 1));
+            int[] blame = computeBlame(in.n, in.xs, in.ys, in.eastCows, in.northCows);
             
-            if (expected_ans == amounts) {
+            if (Arrays.equals(expected_ans, blame)) {
                 System.out.println("PASSED TEST " + getTestCase(files.get(i)) + 
-                    "/" + files.size() / 2 + ": " + amounts + "\n");
+                    "/" + files.size() / 2 + ": " + Arrays.toString(blame) + "\n");
             } else {
                 num_failed++;
                 System.out.println("FAILED TEST " + getTestCase(files.get(i)) + 
                     "/" + files.size() / 2);
-                System.out.println("  Expected: " + expected_ans);
-                System.out.println("  Got:      " + amounts + "\n");
+                System.out.println("  Expected: " + Arrays.toString(expected_ans));
+                System.out.println("  Got:      " + Arrays.toString(blame) + "\n");
             }
         }
 
@@ -33,38 +33,23 @@ public class StuckInARut {
         }
     }
 
-    public static String[] simulateAmounts(int n, int[] xs, int[] ys, char[] dirs) {
-        int[] answer = new int[n];
-        Arrays.fill(answer, Integer.MAX_VALUE);
-
-        List<Integer> differences = new ArrayList<>();
-        for (int j = 0; j < n; j++) {
-            for (int k = j + 1; k < n; k++) {
-                differences.add(Math.abs(xs[k] - xs[j]));
-                differences.add(Math.abs(ys[k] - ys[j]));
-            }
-        }
-
-        Collections.sort(differences);
-        for (int d : differences) {
-            for (int j = 0; j < n; j++) {
-                for (int k = 0; k < n; k++) {
-                    if (dirs[j] == 'E' && dirs[k] == 'N' && xs[j] < xs[k] && ys[k] < ys[j]) {
-                        if (xs[j] + d == xs[k] && ys[k] + Math.min(answer[k], d) > ys[j]) {
-                            answer[j] = Math.min(answer[j], d);
-                        } else if (ys[k] + d == ys[j] && xs[j] + Math.min(answer[j], d) > xs[k]) {
-                            answer[k] = Math.min(answer[k], d);
-                        }
+    public static int[] computeBlame(int n, int[] xs, int[] ys, List<Integer> eastCows, List<Integer> northCows) {
+        boolean[] isStopped = new boolean[n];
+        int[] blame = new int[n];
+        for (int j : eastCows) {
+            for (int k : northCows) {
+                if (!isStopped[j] && !isStopped[k] && xs[k] > xs[j] && ys[j] > ys[k]) {
+                    if (xs[k] - xs[j] > ys[j] - ys[k]) {
+                        isStopped[j] = true;
+                        blame[k] += 1 + blame[j];
+                    } else if (ys[j] - ys[k] > xs[k] - xs[j]) {
+                        isStopped[k] = true;
+                        blame[j] += 1 + blame[k];
                     }
                 }
             }
         }
-
-        String[] amounts = new String[n];
-        for (int i = 0; i < n; i++) {
-            amounts[i] = answer[i] == Integer.MAX_VALUE ? "Infinity" : Integer.toString(answer[i]);
-        }
-        return amounts;
+        return blame;
     }
 
     /* ********** UTILITIES ********** */
@@ -73,22 +58,29 @@ public class StuckInARut {
         int n = Integer.parseInt(br_in.readLine());
         int[] xs = new int[n];
         int[] ys = new int[n];
-        char[] dirs = new char[n];
+        List<Integer> eastCows = new ArrayList<>();
+        List<Integer> northCows = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br_in.readLine());
-            dirs[i] = st.nextToken().charAt(0);
+            if (st.nextToken().charAt(0) == 'E') {
+                eastCows.add(i);
+            } else {
+                northCows.add(i);
+            }
             xs[i] = Integer.parseInt(st.nextToken());
             ys[i] = Integer.parseInt(st.nextToken());
         }
+        eastCows.sort(Comparator.comparingInt(i -> ys[i]));
+        northCows.sort(Comparator.comparingInt(i -> xs[i]));
         br_in.close();
-        return new Input(n, xs, ys, dirs);
+        return new Input(n, xs, ys, eastCows, northCows);
     }
 
-    public static String[] readOutput(int n, File file) throws FileNotFoundException, IOException {
+    public static int[] readOutput(int n, File file) throws FileNotFoundException, IOException {
         BufferedReader br_out = new BufferedReader(new FileReader(file));
-        String[] expected_ans = new String[n];
+        int[] expected_ans = new int[n];
         for (int i = 0; i < n; i++) {
-            expected_ans[i] = br_out.readLine();
+            expected_ans[i] = Integer.parseInt(br_out.readLine());
         }
         br_out.close();
         return expected_ans;
@@ -131,11 +123,13 @@ class Input {
     int n;
     int[] xs;
     int[] ys;
-    char[] dirs;
-    Input(int n, int[] xs, int[] ys, char[] dirs) {
+    List<Integer> eastCows = new ArrayList<>();
+    List<Integer> northCows = new ArrayList<>();
+    Input(int n, int[] xs, int[] ys, List<Integer> eastCows, List<Integer> northCows) {
         this.n = n;
         this.xs = xs;
         this.ys = ys;
-        this.dirs = dirs;
+        this.eastCows = eastCows;
+        this.northCows = northCows;
     }
 }
