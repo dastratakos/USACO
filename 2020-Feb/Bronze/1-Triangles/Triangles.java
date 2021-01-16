@@ -31,9 +31,9 @@ public class Triangles {
         int max_area = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) { // same x-coordinate
-                if ((i == j || x[i] != x[j]) continue;
+                if (i == j || x[i] != x[j]) continue;
                 for (int k = 0; k < n; k++) { // same y-coordinate
-                    if ((i == k || y[i] != y[k]) continue;
+                    if (i == k || y[i] != y[k]) continue;
                     max_area = Math.max(max_area, Math.abs(x[k] - x[i]) * Math.abs(y[j] - y[i]));
                 }
             }
