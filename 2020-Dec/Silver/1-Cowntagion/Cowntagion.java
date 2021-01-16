@@ -9,81 +9,67 @@ public class Cowntagion {
         int num_failed = 0;
         for (int i = 0; i < files.size(); i += 2) {
             Input in = readInput(files.get(i));
-            String[] expected_ans = readOutput(in.n, files.get(i + 1));
-            String[] amounts = simulateAmounts(in.n, in.xs, in.ys, in.dirs);
+            int expected_ans = readOutput(in.n, files.get(i + 1));
+            int min_days = findMinDays(in.n, in.num_children);
             
-            if (!Arrays.equals(expected_ans, amounts)) {
+            if (expected_ans == min_days) {
+                System.out.println("PASSED TEST " + getTestCase(files.get(i)) + 
+                    "/" + files.size() / 2 + ": " + min_days + "\n");
+            } else {
                 num_failed++;
-                System.out.println("FAILED TEST CASE " + getTestCase(files.get(i)));
-                System.out.println("Expected: " + expected_ans);
-                System.out.println("Got:      " + amounts + "\n");
+                System.out.println("FAILED TEST " + getTestCase(files.get(i)) + 
+                    "/" + files.size() / 2);
+                System.out.println("  Expected: " + expected_ans);
+                System.out.println("  Got:      " + min_days + "\n");
             }
         }
 
         if (num_failed == 0) {
-            System.out.println("PASSED ALL TEST CASES (" + files.size() / 2 + "/" + files.size() / 2 + ")");
+            System.out.println("**** PASSED ALL TESTS (" + files.size() / 2 +
+                "/" + files.size() / 2 + ") ****");
         } else {
-            System.out.println("FAILED " + num_failed + "/" + files.size() / 2 + " TEST CASES");
+            System.out.println("**** FAILED " + num_failed + "/" +
+                files.size() / 2 + " TESTS ****");
         }
     }
 
-    public static String[] simulateAmounts(int n, int[] xs, int[] ys, char[] dirs) {
-        int[] answer = new int[n];
-        Arrays.fill(answer, Integer.MAX_VALUE);
-
-        List<Integer> differences = new ArrayList<>();
-        for (int j = 0; j < n; j++) {
-            for (int k = j + 1; k < n; k++) {
-                differences.add(Math.abs(xs[k] - xs[j]));
-                differences.add(Math.abs(ys[k] - ys[j]));
-            }
-        }
-
-        Collections.sort(differences);
-        for (int d : differences) {
-            for (int j = 0; j < n; j++) {
-                for (int k = 0; k < n; k++) {
-                    if (dirs[j] == 'E' && dirs[k] == 'N' && xs[j] < xs[k] && ys[k] < ys[j]) {
-                        if (xs[j] + d == xs[k] && ys[k] + Math.min(answer[k], d) > ys[j]) {
-                            answer[j] = Math.min(answer[j], d);
-                        } else if (ys[k] + d == ys[j] && xs[j] + Math.min(answer[j], d) > xs[k]) {
-                            answer[k] = Math.min(answer[k], d);
-                        }
-                    }
-                }
-            }
-        }
-
-        String[] amounts = new String[n];
+    public static int findMinDays(int n, int[] num_children) {
+        int num_days = n - 1;                            // number of move events
         for (int i = 0; i < n; i++) {
-            amounts[i] = answer[i] == Integer.MAX_VALUE ? "Infinity" : Integer.toString(answer[i]);
+            // if i is not a leaf node
+            if (num_children[i] > 1 || i == 0) {
+                int children = num_children[i];
+                if (i != 0) children--;
+
+                // compute ceil(log(children + 1))
+                int log_children = 0;
+                int pow = 1;
+                while(pow < children + 1) { log_children++; pow *= 2; }
+
+                num_days += log_children;
+            }
         }
-        return amounts;
+        return num_days;
     }
 
     /* ********** UTILITIES ********** */
     public static Input readInput(File file) throws FileNotFoundException, IOException {
         BufferedReader br_in = new BufferedReader(new FileReader(file));
         int n = Integer.parseInt(br_in.readLine());
-        int[] xs = new int[n];
-        int[] ys = new int[n];
-        char[] dirs = new char[n];
-        for (int i = 0; i < n; i++) {
+        int[] num_children = new int[n];
+        for (int i = 0; i < n - 1; i++) {
             StringTokenizer st = new StringTokenizer(br_in.readLine());
-            dirs[i] = st.nextToken().charAt(0);
-            xs[i] = Integer.parseInt(st.nextToken());
-            ys[i] = Integer.parseInt(st.nextToken());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            num_children[a - 1]++; num_children[b - 1]++;
         }
         br_in.close();
-        return new Input(n, xs, ys, dirs);
+        return new Input(n, num_children);
     }
 
-    public static String[] readOutput(int n, File file) throws FileNotFoundException, IOException {
+    public static int readOutput(int n, File file) throws FileNotFoundException, IOException {
         BufferedReader br_out = new BufferedReader(new FileReader(file));
-        String[] expected_ans = new String[n];
-        for (int i = 0; i < n; i++) {
-            expected_ans[i] = br_out.readLine();
-        }
+        int expected_ans = Integer.parseInt(br_out.readLine());
         br_out.close();
         return expected_ans;
     }
@@ -123,13 +109,9 @@ public class Cowntagion {
 
 class Input {
     int n;
-    int[] xs;
-    int[] ys;
-    char[] dirs;
-    Input(int n, int[] xs, int[] ys, char[] dirs) {
+    int[] num_children;
+    Input(int n, int[] num_children) {
         this.n = n;
-        this.xs = xs;
-        this.ys = ys;
-        this.dirs = dirs;
+        this.num_children = num_children;
     }
 }
