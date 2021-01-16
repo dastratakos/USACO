@@ -37,7 +37,7 @@ public class ABCs {
         BufferedReader br_in = new BufferedReader(new FileReader(file));
         int[] nums = new int[7];
         StringTokenizer st = new StringTokenizer(br_in.readLine());
-        for(int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             nums[i] = Integer.parseInt(st.nextToken());
         }
         br_in.close();
@@ -48,7 +48,7 @@ public class ABCs {
         BufferedReader br_out = new BufferedReader(new FileReader(file));
         int[] expected_ans = new int[3];
         StringTokenizer st = new StringTokenizer(br_out.readLine());
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             expected_ans[i] = Integer.parseInt(st.nextToken());
         }
         br_out.close();

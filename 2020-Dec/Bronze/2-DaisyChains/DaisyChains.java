@@ -49,7 +49,7 @@ public class DaisyChains {
         int n = Integer.parseInt(br_in.readLine());
         int[] petals = new int[n];
         StringTokenizer st = new StringTokenizer(br_in.readLine());
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             petals[i] = Integer.parseInt(st.nextToken());
         }
         br_in.close();

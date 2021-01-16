@@ -29,14 +29,14 @@ public class MadScientist {
 
     public static int doSwaps(int n, char[] a, char[] b) {
         int num_swaps = 0;
-        while(!new String(a).equals(new String(b))) {
+        while (!new String(a).equals(new String(b))) {
             num_swaps++;
             int lhs = 0;
-            while(a[lhs] == b[lhs]) lhs++;
+            while (a[lhs] == b[lhs]) lhs++;
             int rhs = n-1;
-            while(a[rhs] == b[rhs]) rhs--;
-            for(int i = lhs; i <= rhs; i++) {
-                if(a[i] == 'G') a[i] = 'H';
+            while (a[rhs] == b[rhs]) rhs--;
+            for (int i = lhs; i <= rhs; i++) {
+                if (a[i] == 'G') a[i] = 'H';
                 else a[i] = 'G';
             }
         }

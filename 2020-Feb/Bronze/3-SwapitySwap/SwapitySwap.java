@@ -39,7 +39,7 @@ public class SwapitySwap {
             reverse(cows, b_1, b_2);
             sorted = true;
             for (int i = 0; sorted && i < n; i++) sorted = cows[i] == i + 1;
-        } while(!sorted);
+        } while (!sorted);
 
         k %= cycleSize;
 

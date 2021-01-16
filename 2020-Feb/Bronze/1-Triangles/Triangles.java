@@ -29,11 +29,11 @@ public class Triangles {
 
     public static int findMax(int n, int[] x, int[] y) {
         int max_area = 0;
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) { // same x-coordinate
-                if(i == j || x[i] != x[j]) continue;
-                for(int k = 0; k < n; k++) { // same y-coordinate
-                    if(i == k || y[i] != y[k]) continue;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) { // same x-coordinate
+                if ((i == j || x[i] != x[j]) continue;
+                for (int k = 0; k < n; k++) { // same y-coordinate
+                    if ((i == k || y[i] != y[k]) continue;
                     max_area = Math.max(max_area, Math.abs(x[k] - x[i]) * Math.abs(y[j] - y[i]));
                 }
             }
@@ -47,7 +47,7 @@ public class Triangles {
         int n = Integer.parseInt(br_in.readLine());
         int[] x = new int[n];
         int[] y = new int[n];
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br_in.readLine());
             x[i] = Integer.parseInt(st.nextToken());
             y[i] = Integer.parseInt(st.nextToken());
