@@ -1,22 +1,22 @@
 import java.io.*;
 import java.util.*;
 
-public class MadScientist {
+public class ABCs {
     public static void main(String[] args) throws IOException {
-        String test_dir = "./2020-Feb/Bronze/2-MadScientist/tests/";
+        String test_dir = "./2020-Dec/Bronze/1-ABCs/tests/";
         List<File> files = listDir(new File(test_dir));
 
         int num_failed = 0;
         for (int i = 0; i < files.size(); i += 2) {
-            Input in = readInput(files.get(i));
-            int expected_ans = readOutput(files.get(i + 1));
-            int num_swaps = doSwaps(in.n, in.a, in.b);
+            int[] nums = readInput(files.get(i));
+            int[] expected_ans = readOutput(files.get(i + 1));
+            int[] abc = findABC(nums);
 
-            if (expected_ans != num_swaps) {
+            if (!Arrays.equals(expected_ans, abc)) {
                 num_failed++;
                 System.out.println("FAILED TEST CASE " + getTestCase(files.get(i)));
                 System.out.println("Expected: " + expected_ans);
-                System.out.println("Got:      " + num_swaps + "\n");
+                System.out.println("Got:      " + abc + "\n");
             }
         }
 
@@ -27,35 +27,31 @@ public class MadScientist {
         }
     }
 
-    public static int doSwaps(int n, char[] a, char[] b) {
-        int num_swaps = 0;
-        while(!new String(a).equals(new String(b))) {
-            num_swaps++;
-            int lhs = 0;
-            while(a[lhs] == b[lhs]) lhs++;
-            int rhs = n-1;
-            while(a[rhs] == b[rhs]) rhs--;
-            for(int i = lhs; i <= rhs; i++) {
-                if(a[i] == 'G') a[i] = 'H';
-                else a[i] = 'G';
-            }
-        }
-        return num_swaps;
+    public static int[] findABC(int[] nums) {
+        int[] abc = new int[3];
+
+        return abc;
     }
 
     /* ********** UTILITIES ********** */
-    public static Input readInput(File file) throws FileNotFoundException, IOException {
+    public static int[] readInput(File file) throws FileNotFoundException, IOException {
         BufferedReader br_in = new BufferedReader(new FileReader(file));
-        int n = Integer.parseInt(br_in.readLine());
-        char[] a = br_in.readLine().toCharArray();
-        char[] b = br_in.readLine().toCharArray();
+        int[] nums = new int[7];
+        StringTokenizer st = new StringTokenizer(br_in.readLine());
+        for(int i = 0; i < 7; i++) {
+            nums[i] = Integer.parseInt(st.nextToken());
+        }
         br_in.close();
-        return new Input(n, a, b);
+        return nums;
     }
 
-    public static int readOutput(File file) throws FileNotFoundException, IOException {
+    public static int[] readOutput(File file) throws FileNotFoundException, IOException {
         BufferedReader br_out = new BufferedReader(new FileReader(file));
-        int expected_ans = Integer.parseInt(br_out.readLine());
+        int[] expected_ans = new int[3];
+        StringTokenizer st = new StringTokenizer(br_out.readLine());
+        for(int i = 0; i < 3; i++) {
+            expected_ans[i] = Integer.parseInt(st.nextToken());
+        }
         br_out.close();
         return expected_ans;
     }
@@ -90,16 +86,5 @@ public class MadScientist {
         String[] tokens = file.getPath().split("/");
         String filename = tokens[tokens.length - 1];
         return Integer.parseInt(filename.split("\\.")[0]);
-    }
-}
-
-class Input {
-    int n;
-    char[] a;
-    char[] b;
-    Input(int n, char[] a, char[] b) {
-        this.n = n;
-        this.a = a;
-        this.b = b;
     }
 }

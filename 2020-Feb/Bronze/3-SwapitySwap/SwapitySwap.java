@@ -10,7 +10,7 @@ public class SwapitySwap {
         for (int i = 0; i < files.size(); i += 2) {
             Input in = readInput(files.get(i));
             int[] expected_ans = readOutput(in.n, files.get(i + 1));
-            int[] final_order = swap(in.n, in.k, in.a_1, in.a_2, in.b_1, in.b_2);
+            int[] final_order = doSwaps(in.n, in.k, in.a_1, in.a_2, in.b_1, in.b_2);
 
             if (!Arrays.equals(expected_ans, final_order)) {
                 num_failed++;
@@ -27,68 +27,7 @@ public class SwapitySwap {
         }
     }
 
-    public static List<File> listDir(File dirName) {
-        List<File> files = new ArrayList<>();
-        File[] fileList = dirName.listFiles();
-        for (File file : fileList) {
-            if (file.isFile()) {
-                files.add(file);
-            } else if (file.isDirectory()) {
-                files.add(file);
-                listDir(file);
-            }
-        }
-        Collections.sort(files, new Comparator<File>() {
-            @Override
-            public int compare(File f1, File f2) {
-                int n1 = getTestCase(f1);
-                int n2 = getTestCase(f2);
-                if (n1 == n2) {
-                    return f1.getPath().endsWith(".in") ? -1 : 1;
-                } else {
-                    return n1 - n2;
-                }
-            }
-        });
-        return files;
-    }
-
-    public static Input readInput(File file) throws FileNotFoundException, IOException {
-        BufferedReader br_in = new BufferedReader(new FileReader(file));
-        
-        StringTokenizer st = new StringTokenizer(br_in.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int k = Integer.parseInt(st.nextToken());
-
-        st = new StringTokenizer(br_in.readLine());
-        int a_1 = Integer.parseInt(st.nextToken());
-        int a_2 = Integer.parseInt(st.nextToken());
-
-        st = new StringTokenizer(br_in.readLine());
-        int b_1 = Integer.parseInt(st.nextToken());
-        int b_2 = Integer.parseInt(st.nextToken());
-       
-        br_in.close();
-        return new Input(n, k, a_1, a_2, b_1, b_2);
-    }
-
-    public static int[] readOutput(int n, File file) throws FileNotFoundException, IOException {
-        BufferedReader br_out = new BufferedReader(new FileReader(file));
-        int[] expected_ans = new int[n];
-        for (int i = 0; i < n; i++) {
-            expected_ans[i] = Integer.parseInt(br_out.readLine());
-        }
-        br_out.close();
-        return expected_ans;
-    }
-
-    public static int getTestCase(File file) {
-        String[] tokens = file.getPath().split("/");
-        String filename = tokens[tokens.length - 1];
-        return Integer.parseInt(filename.split("\\.")[0]);
-    }
-
-    public static int[] swap(int n, int k, int a_1, int a_2, int b_1, int b_2) {
+    public static int[] doSwaps(int n, int k, int a_1, int a_2, int b_1, int b_2) {
         int[] cows = new int[n];
         for (int i = 0; i < n; i++) cows[i] = i + 1;
         
@@ -122,6 +61,68 @@ public class SwapitySwap {
             a++;
             b--;
         }
+    }
+
+    /* ********** UTILITIES ********** */
+    public static Input readInput(File file) throws FileNotFoundException, IOException {
+        BufferedReader br_in = new BufferedReader(new FileReader(file));
+        
+        StringTokenizer st = new StringTokenizer(br_in.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br_in.readLine());
+        int a_1 = Integer.parseInt(st.nextToken());
+        int a_2 = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br_in.readLine());
+        int b_1 = Integer.parseInt(st.nextToken());
+        int b_2 = Integer.parseInt(st.nextToken());
+       
+        br_in.close();
+        return new Input(n, k, a_1, a_2, b_1, b_2);
+    }
+
+    public static int[] readOutput(int n, File file) throws FileNotFoundException, IOException {
+        BufferedReader br_out = new BufferedReader(new FileReader(file));
+        int[] expected_ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            expected_ans[i] = Integer.parseInt(br_out.readLine());
+        }
+        br_out.close();
+        return expected_ans;
+    }
+
+    public static List<File> listDir(File dirName) {
+        List<File> files = new ArrayList<>();
+        File[] fileList = dirName.listFiles();
+        for (File file : fileList) {
+            if (file.isFile()) {
+                files.add(file);
+            } else if (file.isDirectory()) {
+                files.add(file);
+                listDir(file);
+            }
+        }
+        Collections.sort(files, new Comparator<File>() {
+            @Override
+            public int compare(File f1, File f2) {
+                int n1 = getTestCase(f1);
+                int n2 = getTestCase(f2);
+                if (n1 == n2) {
+                    return f1.getPath().endsWith(".in") ? -1 : 1;
+                } else {
+                    return n1 - n2;
+                }
+            }
+        });
+        return files;
+    }
+
+    public static int getTestCase(File file) {
+        String[] tokens = file.getPath().split("/");
+        String filename = tokens[tokens.length - 1];
+        return Integer.parseInt(filename.split("\\.")[0]);
     }
 }
 
