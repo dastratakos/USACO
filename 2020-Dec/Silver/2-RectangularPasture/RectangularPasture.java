@@ -3,7 +3,7 @@ import java.util.*;
 
 public class RectangularPasture {
     public static void main(String[] args) throws IOException {
-        String test_dir = "./2020-Dec/Bronze/3-StuckInARut/tests/";
+        String test_dir = "./2020-Dec/Silver/2-RectangularPasture/tests/";
         List<File> files = listDir(new File(test_dir));
 
         int num_failed = 0;
