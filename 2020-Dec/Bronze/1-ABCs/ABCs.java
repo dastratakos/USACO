@@ -14,16 +14,16 @@ public class ABCs {
 
             if (!Arrays.equals(expected_ans, abc)) {
                 num_failed++;
-                System.out.println("FAILED TEST CASE " + getTestCase(files.get(i)));
+                System.out.println("FAILED TEST " + getTestCase(files.get(i)));
                 System.out.println("Expected: " + expected_ans);
                 System.out.println("Got:      " + abc + "\n");
             }
         }
 
         if (num_failed == 0) {
-            System.out.println("PASSED ALL TEST CASES (" + files.size() / 2 + "/" + files.size() / 2 + ")");
+            System.out.println("PASSED ALL TESTS (" + files.size() / 2 + "/" + files.size() / 2 + ")");
         } else {
-            System.out.println("FAILED " + num_failed + "/" + files.size() / 2 + " TEST CASES");
+            System.out.println("FAILED " + num_failed + "/" + files.size() / 2 + " TESTS");
         }
     }
 
