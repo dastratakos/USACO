@@ -28,9 +28,8 @@ public class ABCs {
     }
 
     public static int[] findABC(int[] nums) {
-        int[] abc = new int[3];
-
-        return abc;
+        Arrays.sort(nums);
+        return new int[]{nums[0], nums[1], nums[6] - nums[0] - nums[1]};
     }
 
     /* ********** UTILITIES ********** */
@@ -55,7 +54,7 @@ public class ABCs {
         br_out.close();
         return expected_ans;
     }
-    
+
     public static List<File> listDir(File dirName) {
         List<File> files = new ArrayList<>();
         File[] fileList = dirName.listFiles();
