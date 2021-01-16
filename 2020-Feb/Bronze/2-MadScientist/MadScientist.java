@@ -10,13 +10,13 @@ public class MadScientist {
         for (int i = 0; i < files.size(); i += 2) {
             Input in = readInput(files.get(i));
             int expected_ans = readOutput(files.get(i + 1));
-            int max_area = find_max(in.n, in.x, in.y);
+            int num_swaps = doSwaps(in.n, in.a, in.b);
 
-            if (expected_ans != max_area) {
+            if (expected_ans != num_swaps) {
                 num_failed++;
                 System.out.println("FAILED TEST CASE " + getTestCase(files.get(i)));
                 System.out.println("Expected: " + expected_ans);
-                System.out.println("Got:      " + max_area + "\n");
+                System.out.println("Got:      " + num_swaps + "\n");
             }
         }
 
@@ -56,15 +56,10 @@ public class MadScientist {
     public static Input readInput(File file) throws FileNotFoundException, IOException {
         BufferedReader br_in = new BufferedReader(new FileReader(file));
         int n = Integer.parseInt(br_in.readLine());
-        int[] x = new int[n];
-        int[] y = new int[n];
-        for(int i = 0; i < n; i++) {
-            StringTokenizer st = new StringTokenizer(br_in.readLine());
-            x[i] = Integer.parseInt(st.nextToken());
-            y[i] = Integer.parseInt(st.nextToken());
-        }
+        char[] a = br_in.readLine().toCharArray();
+        char[] b = br_in.readLine().toCharArray();
         br_in.close();
-        return new Input(n, x, y);
+        return new Input(n, a, b);
     }
 
     public static int readOutput(File file) throws FileNotFoundException, IOException {
@@ -80,28 +75,30 @@ public class MadScientist {
         return Integer.parseInt(filename.split("\\.")[0]);
     }
 
-    public static int find_max(int n, int[] x, int[] y) {
-        int max_area = 0;
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) { // same x-coordinate
-                if(i == j || x[i] != x[j]) continue;
-                for(int k = 0; k < n; k++) { // same y-coordinate
-                    if(i == k || y[i] != y[k]) continue;
-                    max_area = Math.max(max_area, Math.abs(x[k] - x[i]) * Math.abs(y[j] - y[i]));
-                }
+    public static int doSwaps(int n, char[] a, char[] b) {
+        int num_swaps = 0;
+        while(!new String(a).equals(new String(b))) {
+            num_swaps++;
+            int lhs = 0;
+            while(a[lhs] == b[lhs]) lhs++;
+            int rhs = n-1;
+            while(a[rhs] == b[rhs]) rhs--;
+            for(int i = lhs; i <= rhs; i++) {
+                if(a[i] == 'G') a[i] = 'H';
+                else a[i] = 'G';
             }
         }
-        return max_area;
+        return num_swaps;
     }
 }
 
 class Input {
     int n;
-    int[] x;
-    int[] y;
-    Input(int n, int[] x, int[] y) {
+    char[] a;
+    char[] b;
+    Input(int n, char[] a, char[] b) {
         this.n = n;
-        this.x = x;
-        this.y = y;
+        this.a = a;
+        this.b = b;
     }
 }
