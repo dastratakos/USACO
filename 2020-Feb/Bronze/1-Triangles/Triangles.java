@@ -14,16 +14,16 @@ public class Triangles {
 
             if (expected_ans != max_area) {
                 num_failed++;
-                System.out.println("FAILED TEST CASE " + getTestCase(files.get(i)));
+                System.out.println("FAILED TEST " + getTestCase(files.get(i)));
                 System.out.println("Expected: " + expected_ans);
                 System.out.println("Got:      " + max_area + "\n");
             }
         }
 
         if (num_failed == 0) {
-            System.out.println("PASSED ALL TEST CASES (" + files.size() / 2 + "/" + files.size() / 2 + ")");
+            System.out.println("PASSED ALL TESTS (" + files.size() / 2 + "/" + files.size() / 2 + ")");
         } else {
-            System.out.println("FAILED " + num_failed + "/" + files.size() / 2 + " TEST CASES");
+            System.out.println("FAILED " + num_failed + "/" + files.size() / 2 + " TESTS");
         }
     }
 

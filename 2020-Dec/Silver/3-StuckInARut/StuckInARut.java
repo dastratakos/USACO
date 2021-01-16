@@ -12,18 +12,24 @@ public class StuckInARut {
             String[] expected_ans = readOutput(in.n, files.get(i + 1));
             String[] amounts = simulateAmounts(in.n, in.xs, in.ys, in.dirs);
             
-            if (!Arrays.equals(expected_ans, amounts)) {
+            if (expected_ans == amounts) {
+                System.out.println("PASSED TEST " + getTestCase(files.get(i)) + 
+                    "/" + files.size() / 2 + ": " + amounts + "\n");
+            } else {
                 num_failed++;
-                System.out.println("FAILED TEST " + getTestCase(files.get(i)));
-                System.out.println("Expected: " + expected_ans);
-                System.out.println("Got:      " + amounts + "\n");
+                System.out.println("FAILED TEST " + getTestCase(files.get(i)) + 
+                    "/" + files.size() / 2);
+                System.out.println("  Expected: " + expected_ans);
+                System.out.println("  Got:      " + amounts + "\n");
             }
         }
 
         if (num_failed == 0) {
-            System.out.println("PASSED ALL TESTS (" + files.size() / 2 + "/" + files.size() / 2 + ")");
+            System.out.println("**** PASSED ALL TESTS (" + files.size() / 2 +
+                "/" + files.size() / 2 + ") ****");
         } else {
-            System.out.println("FAILED " + num_failed + "/" + files.size() / 2 + " TESTS");
+            System.out.println("**** FAILED " + num_failed + "/" +
+                files.size() / 2 + " TESTS ****");
         }
     }
 
