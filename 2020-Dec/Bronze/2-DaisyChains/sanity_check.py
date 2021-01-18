@@ -15,6 +15,9 @@ class styles:
 def header(msg):
     return f'+{"-" * (len(msg) + 2)}+\n| {msg} |\n+{"-" * (len(msg) + 2)}+'
 
+def cyan(msg):
+    return styles.OKCYAN + msg + styles.ENDC
+
 def success(msg):
     return styles.OKGREEN + msg + styles.ENDC
 
@@ -23,6 +26,12 @@ def failure(msg):
 
 def bold(msg):
     return styles.BOLD + msg + styles.ENDC
+
+def format(msg):
+    if msg.count('\n') > 7:
+        lines = msg.split('\n')
+        return ('\n').join(lines[:3]) + '\n...\n' + ('\n').join(lines[-3:])
+    return msg
 
 if __name__ == '__main__':
     programs = [x for x in os.listdir(('/').join(__file__.split('/')[:-1])) if x.lower().endswith('.java')]
@@ -57,22 +66,22 @@ if __name__ == '__main__':
         
         if ok:
             num_successes += 1
-            print(bold(success(f'PASSED test case {i}')))
+            print(bold(success(f'PASSED test case {i}')) + '\n')
         else:
-            print(bold(failure(f'FAILED test case {i}')))
+            print(bold(failure(f'FAILED test case {i}')) + '\n')
         
         print(bold('Input') + \
             ('\n' if '\n' in input else '           ') + \
-            input)
+            format(input) + '\n')
         print(bold('Expected answer') + \
             ('\n' if '\n' in expected_output else ' ') + \
-            success(expected_output))
+            format(success(expected_output)) + '\n')
         print(bold('Your answer') + \
             ('\n' if '\n' in expected_output else '     ') + \
-            (success(actual_output) if ok else failure(actual_output)))
+            format((success(actual_output) if ok else failure(actual_output))))
         if java_program.stderr.strip():
             print(failure(java_program.stderr.strip()))
-        print()
+        print('\n' + cyan('=' * 60) + '\n')
 
     if (num_tests - num_successes == 0):
         print(bold(success(header(f'PASSED ALL TESTS ({num_tests}/{num_tests})'))))
