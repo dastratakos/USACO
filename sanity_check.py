@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import subprocess
 import sys
 
@@ -31,28 +32,54 @@ def warning(msg):
 def bold(msg):
     return styles.BOLD + msg + styles.ENDC
 
+def underline(msg):
+    return styles.UNDERLINE + msg + styles.ENDC
+
 def format(msg):
     if msg.count('\n') > 7:
         lines = msg.split('\n')
         return ('\n').join(lines[:3]) + '\n...\n' + ('\n').join(lines[-3:])
     return msg
 
+def askForInput(files):
+    while True:
+        try:
+            filenum = int(input(f'Choose a file to test (1-{len(files)}): '))
+        except ValueError:
+            print("Sorry, I didn't understand that.")
+            continue
+
+        if filenum < 1 or filenum > len(files):
+            print(f'Sorry, you must enter a number between 1 and {len(files)}.')
+            continue
+        else:
+            break
+    return filenum
+
 def getProgramAndDir():
-    dir = ('/').join(__file__.split('/')[:-1]) + '/'
+    files = sorted([str(x) for x in Path(".").rglob("*.[jJ][aA][vV][aA]")])
+    if len(files) == 0:
+        print('Error: ' + warning('No .java files found'))
+        return None, None
+    print(underline(f'Found {len(files)} .java files') + '\n')
+    contest = files[0].split('/')[:2]
+    for i, file in enumerate(files):
+        if file.split('/')[:2] != contest:
+            print()
+            contest = file.split('/')[:2]
+        print(f'{" " if i < 9 else ""}[{i + 1}]: ' + \
+            ('\t').join(file.split('/')[:2]) + ('\t') + \
+            file.split('/')[-2][0] + ' ' + file.split('/')[-2][2:])
+    print()
 
-    programs = [x for x in os.listdir(('/').join(__file__.split('/')[:-1])) if x.lower().endswith('.java')]
-    if len(programs) == 0:
-        print('Error: ' + warning('Please creata a .java file in the directory.'))
-        return None, dir
-    elif len(programs) > 1:
-        print('Error: ' + warning('Please make sure there is only one .java file in the directory. ' + str(programs)))
-        return None, dir
-    program = programs[0]
+    filenum = askForInput(files)
 
+    program = files[filenum - 1]
+    dir = ('/').join(program.split('/')[:-1]) + '/'
     return program, dir
 
-def getNumTests():
-    if not os.path.exists(dir + 'tests') > 0:
+def getNumTests(dir):
+    if not os.path.exists(dir + 'tests'):
         print('Error: ' + warning('Please create a tests/ sub-directory.'))
         return None
     num_tests = int(len(os.listdir(dir + 'tests')) / 2)
@@ -74,8 +101,10 @@ def runSubprocess(args, input):
     return out, err
 
 if __name__ == '__main__':
+    print('\n' + cyan(header('USACO SANITY CHECK')) + '\n')
+
     program, dir = getProgramAndDir()
-    num_tests = getNumTests()
+    num_tests = getNumTests(dir)
 
     if not program or not num_tests:
         sys.exit()
@@ -92,7 +121,7 @@ if __name__ == '__main__':
         expected_output = f_in.read().strip()
         f_in.close()
 
-        actual_output, err = runSubprocess(['java', dir + program], input)
+        actual_output, err = runSubprocess(['java', program], input)
         passed = expected_output == actual_output
         
         if passed:
