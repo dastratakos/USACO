@@ -54,10 +54,9 @@ def underline(msg):
 def format(msg, verbose=False):
     if verbose: return msg
 
-    lines = msg.split('\n')
+    lines = [(x[:97] + '...') if len(x) > 100 else x for x in msg.split('\n')]
     if len(lines) > 7:
         return ('\n').join(lines[:3]) + '\n...\n' + ('\n').join(lines[-3:])
-    lines = [(x[:57] + '...') if len(x) > 60 else x for x in lines]
     return ('\n').join(lines)
 
 def askForInput(files):
@@ -146,11 +145,11 @@ def runTestCases(program, num_tests, verbose=False):
             format(input, verbose=verbose) + '\n')
         print(bold('Expected answer') + \
             ('\n' if '\n' in expected_output else ' ') + \
-            format(success(expected_output), verbose=verbose) + '\n')
+            success(format(expected_output, verbose=verbose)) + '\n')
         print(bold('Your answer') + \
             ('\n' if '\n' in expected_output else '     ') + \
-            format(success(actual_output) if passed else failure(actual_output),
-                verbose=verbose))
+            success(format(actual_output, verbose=verbose)) if passed else
+            failure(format(actual_output, verbose=verbose)))
         if err:
             print(failure(err))
         print('\n' + cyan('=' * 60) + '\n')
