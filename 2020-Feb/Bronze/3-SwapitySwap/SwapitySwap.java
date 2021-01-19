@@ -33,7 +33,8 @@ public class SwapitySwap {
             reverse(cows, b1, b2);
         }
 
-        for (int c : cows) System.out.println(c);
+        for (int c : cows)
+            System.out.println(c);
     }
 
     private static void reverse(int[] cows, int a, int b) {
