@@ -100,15 +100,7 @@ def runSubprocess(args, input):
     err = java_program.stderr.strip()
     return out, err
 
-if __name__ == '__main__':
-    print('\n' + cyan(header('USACO SANITY CHECK')) + '\n')
-
-    program, dir = getProgramAndDir()
-    num_tests = getNumTests(dir)
-
-    if not program or not num_tests:
-        sys.exit()
-
+def runTestCases(program, num_tests):
     print('\n' + header(f'Running {num_tests} tests on {program}') + '\n')
 
     num_successes = 0
@@ -147,3 +139,14 @@ if __name__ == '__main__':
         print(bold(success(header(f'PASSED ALL TESTS ({num_tests}/{num_tests})'))))
     else:
         print(bold(failure(header(f'PASSED {num_successes}/{num_tests} TESTS'))))
+
+if __name__ == '__main__':
+    print('\n' + cyan(header('USACO SANITY CHECK')) + '\n')
+
+    program, dir = getProgramAndDir()
+    num_tests = getNumTests(dir)
+
+    if not program or not num_tests:
+        sys.exit()
+
+    runTestCases(program, num_tests)
