@@ -1,3 +1,19 @@
+"""
+file:   sanity_check.py
+author: Dean Stratakos
+date:   January 17, 2020
+------------------------
+This script runs a sanity check for USACO contest problems. It allows solutions
+to be coded in .java files where the input is taken from System.in, and the
+output can be given to System.out. For example, you might write the following:
+    Scanner input = new Scanner(System.in);
+    // Solution...
+    System.out.println(answer);
+
+TODO: add ArgParser to specify command-line arguments
+TODO: add time/memory constraints like in USACO
+"""
+
 import os
 from pathlib import Path
 import subprocess
@@ -35,11 +51,14 @@ def bold(msg):
 def underline(msg):
     return styles.UNDERLINE + msg + styles.ENDC
 
-def format(msg):
-    if msg.count('\n') > 7:
-        lines = msg.split('\n')
+def format(msg, verbose=False):
+    if verbose: return msg
+
+    lines = msg.split('\n')
+    if len(lines) > 7:
         return ('\n').join(lines[:3]) + '\n...\n' + ('\n').join(lines[-3:])
-    return msg
+    lines = [(x[:57] + '...') if len(x) > 60 else x for x in lines]
+    return ('\n').join(lines)
 
 def askForInput(files):
     while True:
@@ -100,7 +119,7 @@ def runSubprocess(args, input):
     err = java_program.stderr.strip()
     return out, err
 
-def runTestCases(program, num_tests):
+def runTestCases(program, num_tests, verbose=False):
     print('\n' + header(f'Running {num_tests} tests on {program}') + '\n')
 
     num_successes = 0
@@ -124,13 +143,14 @@ def runTestCases(program, num_tests):
         
         print(bold('Input') + \
             ('\n' if '\n' in input else '           ') + \
-            format(input) + '\n')
+            format(input, verbose=verbose) + '\n')
         print(bold('Expected answer') + \
             ('\n' if '\n' in expected_output else ' ') + \
-            format(success(expected_output)) + '\n')
+            format(success(expected_output), verbose=verbose) + '\n')
         print(bold('Your answer') + \
             ('\n' if '\n' in expected_output else '     ') + \
-            format((success(actual_output) if passed else failure(actual_output))))
+            format(success(actual_output) if passed else failure(actual_output),
+                verbose=verbose))
         if err:
             print(failure(err))
         print('\n' + cyan('=' * 60) + '\n')
@@ -149,4 +169,4 @@ if __name__ == '__main__':
     if not program or not num_tests:
         sys.exit()
 
-    runTestCases(program, num_tests)
+    runTestCases(program, num_tests, verbose=False)
