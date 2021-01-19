@@ -148,8 +148,8 @@ def runTestCases(program, num_tests, verbose=False):
             success(format(expected_output, verbose=verbose)) + '\n')
         print(bold('Your answer') + \
             ('\n' if '\n' in expected_output else '     ') + \
-            success(format(actual_output, verbose=verbose)) if passed else
-            failure(format(actual_output, verbose=verbose)))
+            (success(format(actual_output, verbose=verbose)) if passed else
+            failure(format(actual_output, verbose=verbose))))
         if err:
             print(failure(err))
         print('\n' + cyan('=' * 60) + '\n')
