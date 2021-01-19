@@ -27,16 +27,9 @@ public class CowGymnastics {
 
     public static boolean better(int[][] ranks, int a, int b, int session) {
         int a_rank = 0, b_rank = 0;
-        boolean a_found = false, b_found = false;
         for (int i = 0; i < ranks[0].length; i++) {
-            if (ranks[session][i] == a) {
-                a_rank = i;
-                a_found = true;
-            }
-            if (ranks[session][i] == b) {
-                b_rank = i;
-                b_found = true;
-            }
+            if (ranks[session][i] == a) a_rank = i;
+            if (ranks[session][i] == b) b_rank = i;
         }
         return a_rank < b_rank;
     }
