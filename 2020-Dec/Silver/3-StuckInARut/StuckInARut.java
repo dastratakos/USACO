@@ -1,8 +1,7 @@
-import java.io.*;
 import java.util.*;
 
 public class StuckInARut {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         List<Integer> eastCows = new ArrayList<>();
         List<Integer> northCows = new ArrayList<>();

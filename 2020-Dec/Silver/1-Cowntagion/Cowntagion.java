@@ -1,8 +1,7 @@
-import java.io.*;
 import java.util.*;
 
 public class Cowntagion {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         int n = input.nextInt();
         int[] num_children = new int[n];

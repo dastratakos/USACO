@@ -1,8 +1,7 @@
-import java.io.*;
 import java.util.*;
 
 public class RectangularPasture {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         int n = input.nextInt();
         int[] xs = new int[n];
