@@ -13,7 +13,7 @@ output can be given to System.out. For example, you might write the following:
 TODO: add ArgParser to specify command-line arguments
 TODO: add time/memory constraints like in USACO
 """
-
+import argparse
 import os
 from pathlib import Path
 import subprocess
@@ -162,10 +162,15 @@ def runTestCases(program, num_tests, verbose=False):
 if __name__ == '__main__':
     print('\n' + cyan(header('USACO SANITY CHECK')) + '\n')
 
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('-v', '--verbose', action='store_true',
+                            help='print whole input/output without truncating')
+    args = arg_parser.parse_args()
+
     program, dir = getProgramAndDir()
     num_tests = getNumTests(dir)
 
     if not program or not num_tests:
         sys.exit()
 
-    runTestCases(program, num_tests, verbose=False)
+    runTestCases(program, num_tests, verbose=args.verbose)
