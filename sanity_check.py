@@ -17,6 +17,7 @@ import subprocess
 import sys
 
 class styles:
+    """ ANSI escape sequences for styling. """
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
@@ -72,6 +73,10 @@ def askForInput(files):
     return filenum
 
 def getProgramAndDir():
+    """
+    Finds all .java files in the directory and asks the user which program
+    to run. Returns the path of the selected program and the parent directory.
+    """
     files = sorted([str(x) for x in Path(".").rglob("*.[jJ][aA][vV][aA]")])
     if len(files) == 0:
         print('Error: ' + warning('No .java files found'))
@@ -94,6 +99,10 @@ def getProgramAndDir():
     return program, dir
 
 def getNumTests(dir):
+    """
+    Counts the number of files in the tests/ sub-directory divided by 2. There
+    should be a pair of .in and .out files for each test.
+    """
     if not os.path.exists(dir + 'tests'):
         print('Error: ' + warning('Please create a tests/ sub-directory.'))
         return None
@@ -104,7 +113,8 @@ def getNumTests(dir):
     return num_tests
 
 def runSubprocess(args, input):
-    """Calls the java program using Python's the run() function in Python's
+    """
+    Calls the java program using Python's the run() function in Python's
     subprocess module. There is a timeout limit of 4 seconds for Java programs
     as per USACO Contest Rules (http://usaco.org/index.php?page=instructions).
     """
@@ -117,13 +127,17 @@ def runSubprocess(args, input):
             input=input,
             timeout=4
             )
-    except subprocess.TimeoutExpired as e:
-        return '', 'Your code did not execute within the time limits: ' + str(e)
+    except subprocess.TimeoutExpired:
+        return '', 'Your code did not execute within the 4 second time limit.'
     out = java_program.stdout.strip()
     err = java_program.stderr.strip()
     return out, err
 
 def runTestCases(program, num_tests, verbose=False, quiet=False):
+    """
+    Tests the program on num_tests tests cases. Prints the result along with
+    input/output for each test depending on the verbose and quiet flags.
+    """
     print('\n' + header(f'Running {num_tests} tests on {program}') + '\n')
 
     num_successes = 0
