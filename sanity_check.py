@@ -107,13 +107,21 @@ def getNumTests(dir):
     return num_tests
 
 def runSubprocess(args, input):
-    java_program = subprocess.run(
-        args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        input=input
-        )
+    """Calls the java program using Python's the run() function in Python's
+    subprocess module. There is a timeout limit of 4 seconds for Java programs
+    as per USACO Contest Rules (http://usaco.org/index.php?page=instructions).
+    """
+    try:
+        java_program = subprocess.run(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            input=input,
+            timeout=4
+            )
+    except subprocess.TimeoutExpired as e:
+        return '', 'Your code did not execute within the time limits: ' + str(e)
     out = java_program.stdout.strip()
     err = java_program.stderr.strip()
     return out, err
