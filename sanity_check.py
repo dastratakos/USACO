@@ -161,7 +161,7 @@ def runTestCases(program, num_tests, verbose=False, quiet=False):
                 print(failure(err))
             print('\n' + cyan('=' * 60) + '\n')
 
-    print()
+    if quiet: print()
     if (num_tests - num_successes == 0):
         print(bold(success(header(f'PASSED ALL TESTS ({num_tests}/{num_tests})'))))
     else:
