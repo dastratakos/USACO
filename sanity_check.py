@@ -9,9 +9,6 @@ output can be given to System.out. For example, you might write the following:
     Scanner input = new Scanner(System.in);
     // Solution...
     System.out.println(answer);
-
-TODO: add ArgParser to specify command-line arguments
-TODO: add time/memory constraints like in USACO
 """
 import argparse
 import os
@@ -126,7 +123,7 @@ def runSubprocess(args, input):
     err = java_program.stderr.strip()
     return out, err
 
-def runTestCases(program, num_tests, verbose=False):
+def runTestCases(program, num_tests, verbose=False, quiet=False):
     print('\n' + header(f'Running {num_tests} tests on {program}') + '\n')
 
     num_successes = 0
@@ -144,24 +141,27 @@ def runTestCases(program, num_tests, verbose=False):
         
         if passed:
             num_successes += 1
-            print(bold(success(f'PASSED test case {i}')) + '\n')
+            print(bold(success(f'PASSED test case {i}')))
         else:
-            print(bold(failure(f'FAILED test case {i}')) + '\n')
+            print(bold(failure(f'FAILED test case {i}')))
         
-        print(bold('Input') + \
-            ('\n' if '\n' in input else '           ') + \
-            format(input, verbose=verbose) + '\n')
-        print(bold('Expected answer') + \
-            ('\n' if '\n' in expected_output else ' ') + \
-            success(format(expected_output, verbose=verbose)) + '\n')
-        print(bold('Your answer') + \
-            ('\n' if '\n' in expected_output else '     ') + \
-            (success(format(actual_output, verbose=verbose)) if passed else
-            failure(format(actual_output, verbose=verbose))))
-        if err:
-            print(failure(err))
-        print('\n' + cyan('=' * 60) + '\n')
+        if not quiet:
+            print()
+            print(bold('Input') + \
+                ('\n' if '\n' in input else '           ') + \
+                format(input, verbose=verbose) + '\n')
+            print(bold('Expected answer') + \
+                ('\n' if '\n' in expected_output else ' ') + \
+                success(format(expected_output, verbose=verbose)) + '\n')
+            print(bold('Your answer') + \
+                ('\n' if '\n' in expected_output else '     ') + \
+                (success(format(actual_output, verbose=verbose)) if passed else
+                failure(format(actual_output, verbose=verbose))))
+            if err:
+                print(failure(err))
+            print('\n' + cyan('=' * 60) + '\n')
 
+    print()
     if (num_tests - num_successes == 0):
         print(bold(success(header(f'PASSED ALL TESTS ({num_tests}/{num_tests})'))))
     else:
@@ -173,6 +173,8 @@ if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('-v', '--verbose', action='store_true',
                             help='print whole input/output without truncating')
+    arg_parser.add_argument('-q', '--quiet', action='store_true',
+                            help='remove all input/output print statements')
     args = arg_parser.parse_args()
 
     program, dir = getProgramAndDir()
@@ -181,4 +183,4 @@ if __name__ == '__main__':
     if not program or not num_tests:
         sys.exit()
 
-    runTestCases(program, num_tests, verbose=args.verbose)
+    runTestCases(program, num_tests, verbose=args.verbose, quiet=args.quiet)
